@@ -1,6 +1,6 @@
-def Creaza_Rezervare(ID, nume, clasa, pret, checkin):
+def Creeaza_Rezervare(ID, nume, clasa, pret, checkin):
     '''
-    Aceasta funtie creaza un dictionar de tip rezervare
+    Aceasta funtie creeaza un dictionar de tip rezervare
     :param ID: ID-ul rezervarii- string
     :param nume: Numele rezervarii - string
     :param clasa: Clasa rezervarii (economy, economy plus, business) - string

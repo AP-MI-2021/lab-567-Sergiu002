@@ -1,4 +1,4 @@
-from Domain.rezervare import Creaza_Rezervare, get_ID
+from Domain.rezervare import Creeaza_Rezervare, get_ID
 
 
 def Adauga_Rezervare(ID, nume, clasa, pret, checkin, lista):
@@ -12,7 +12,7 @@ def Adauga_Rezervare(ID, nume, clasa, pret, checkin, lista):
     :param lista: Lista rezervarilor
     :return: Returneaza lista veche + rezervarea noua
     '''
-    rezervare_noua = Creaza_Rezervare(ID, nume, clasa, pret, checkin)
+    rezervare_noua = Creeaza_Rezervare(ID, nume, clasa, pret, checkin)
     return lista + [rezervare_noua]
 
 def get_by_ID(ID, lista):
@@ -48,7 +48,7 @@ def Modifica_Rezervare(ID, nume, clasa, pret, checkin, lista):
     lista_noua = []
     for rezervare in lista:
         if get_ID(rezervare) == ID:
-            rezervare_noua = Creaza_Rezervare(ID, nume, clasa, pret, checkin)
+            rezervare_noua = Creeaza_Rezervare(ID, nume, clasa, pret, checkin)
             lista_noua.append(rezervare_noua)
         else:
             lista_noua.append(rezervare)

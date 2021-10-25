@@ -22,16 +22,51 @@ def UI_Sterge_Rezervare(lista):
 def UI_Modifica_Rezervare(lista):
     ID = input("Dati ID-ul rezervarii pe care doriti sa o modificati: ")
     nume = input("Dati un nume nou: ")
-    clasa = input("Dati o clasa noua(economy, economy plus, business): ")
-    pret = float(input("Dati un pret nou: "))
-    checkin = input("Dati checkin nou(Da sau Nu): ")
+    while True:
+        clasa = input("Dati o clasa noua(economy, economy plus, business): ")
+        if clasa != "economy" and clasa != "economy plus" and clasa != "business":
+            print("Nu ati introdus o clasa existenta!!!")
+        else:
+            break
+    while True:
+        try:
+            pret = float(input("Dati un pret nou: "))
+        except ValueError:
+            print("Eroare")
+        else:
+            print("Succes")
+            break
+    while True:
+        checkin = input("Dati checkin nou(Da sau Nu): ")
+        if checkin != "Da" and checkin != "Nu":
+            print("Introduceti Da sau Nu")
+        else:
+            break
     return Modifica_Rezervare(ID, nume, clasa, pret, checkin, lista)
 def UI_Adauga_Rezervare(lista):
     ID = input("Dati un ID: ")
     nume = input("Dati un nume: ")
-    clasa = input("Dati o clasa (economy, economy plus, business): ")
-    pret = float(input("Dati un pret: "))
-    checkin = input("Dati checkin (Da sau Nu): ")
+
+    while True:
+        clasa = input("Dati o clasa (economy, economy plus, business): ")
+        if clasa != "economy" and clasa != "economy plus" and clasa != "business":
+            print("Nu ati introdus o clasa existenta!!!")
+        else:
+            break
+    while True:
+        try:
+            pret = float(input("Dati un pret: "))
+        except ValueError:
+            print("Eroare")
+        else:
+            print("Succes")
+            break
+    while True:
+        checkin = input("Dati checkin (Da sau Nu): ")
+        if checkin != "Da" and checkin != "Nu":
+            print("Introduceti Da sau Nu")
+        else:
+            break
     return Adauga_Rezervare(ID, nume, clasa, pret, checkin, lista)
 def Show_All(lista):
     for rezervare in lista:

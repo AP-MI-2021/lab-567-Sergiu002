@@ -1,4 +1,4 @@
-from Domain.rezervare import get_nume, Creaza_Rezervare, get_clasa, get_ID, get_pret, get_checkin
+from Domain.rezervare import get_nume, Creeaza_Rezervare, get_clasa, get_ID, get_pret, get_checkin
 
 
 def Trecerea_Rezervarilor_La_Clasa_Superioara(nume, lista):
@@ -12,7 +12,7 @@ def Trecerea_Rezervarilor_La_Clasa_Superioara(nume, lista):
     for rezervare in lista:
         if get_nume(rezervare) == nume:
             if get_clasa(rezervare) == "economy":
-                rezervare_noua = Creaza_Rezervare(
+                rezervare_noua = Creeaza_Rezervare(
                     get_ID(rezervare),
                     get_nume(rezervare),
                     "economy plus",
@@ -21,7 +21,7 @@ def Trecerea_Rezervarilor_La_Clasa_Superioara(nume, lista):
                 )
                 lista_noua.append(rezervare_noua)
             elif get_clasa(rezervare) == "economy plus":
-                rezervare_noua = Creaza_Rezervare(
+                rezervare_noua = Creeaza_Rezervare(
                     get_ID(rezervare),
                     get_nume(rezervare),
                     "business",
@@ -30,7 +30,7 @@ def Trecerea_Rezervarilor_La_Clasa_Superioara(nume, lista):
                 )
                 lista_noua.append(rezervare_noua)
             elif get_clasa(rezervare) == "business":
-                rezervare_noua = Creaza_Rezervare(
+                rezervare_noua = Creeaza_Rezervare(
                     get_ID(rezervare),
                     get_nume(rezervare),
                     get_clasa(rezervare),
@@ -53,7 +53,7 @@ def Ieftinirea_Rezervarilor_Cu_Un_Procentaj(procent, lista):
     lista_noua = []
     for rezervare in lista:
         if get_checkin(rezervare) == "Da":
-            rezervare_noua = Creaza_Rezervare(
+            rezervare_noua = Creeaza_Rezervare(
                 get_ID(rezervare),
                 get_nume(rezervare),
                 get_clasa(rezervare),
