@@ -6,6 +6,10 @@ from Tests.test_functionalitati import Test_Trecerea_Rezervarilor_La_Clasa_Super
 
 
 def Run_All():
+    '''
+    In aceasta functie se introduc toate testele
+    :return:
+    '''
     Test_Rezervare()
     Test_Adauga_Rezervare()
     Test_Sterge_Rezervare()
