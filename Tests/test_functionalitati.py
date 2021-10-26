@@ -1,7 +1,8 @@
 from Domain.rezervare import get_clasa, get_pret
 from Logic.CRUD import Adauga_Rezervare, get_by_ID
 from Logic.functionalitati import Trecerea_Rezervarilor_La_Clasa_Superioara, Ieftinirea_Rezervarilor_Cu_Un_Procentaj, \
-    Determinarea_Pretului_Maxim_Pentru_Fiecare_Clasa, Ordonare_Descrescator_Pret, Sume_Preturi_Pentru_Fiecare_Nume
+    Determinarea_Pretului_Maxim_Pentru_Fiecare_Clasa, Ordonare_Descrescator_Pret, Sume_Preturi_Pentru_Fiecare_Nume, \
+    Lista_de_lista, Functia_Undo
 
 
 def Test_Trecerea_Rezervarilor_La_Clasa_Superioara():
@@ -51,3 +52,22 @@ def Test_Sume_Preturi_Pentru_Fiecare_Nume():
     lista_sume = Sume_Preturi_Pentru_Fiecare_Nume(['Ucraina', 'Austria'], lista)
 
     assert lista_sume == [130.0, 80.0]
+
+def Test_Functia_Undo():
+    lista = Adauga_Rezervare("1", "Ucraina", "economy plus", 100.0, "Da", [])
+    lista = Adauga_Rezervare("2", "Ucraina", "economy", 20.0, "Nu", lista)
+    lista = Adauga_Rezervare("3", "Austria", "economy plus", 80.0, "Da", lista)
+    lista = Adauga_Rezervare("4", "Ucraina", "economy", 10.0, "Nu", lista)
+    Lista_lista = []
+    Lista_lista = Lista_de_lista(Lista_lista, lista)
+    if len(Lista_lista) > 1:
+        lista = Functia_Undo(Lista_lista)
+    assert get_clasa(get_by_ID("1", lista)) == "economy plus"
+    assert get_clasa(get_by_ID("2", lista)) == "economy"
+    assert get_clasa(get_by_ID("3", lista)) == "economy plus"
+    assert get_clasa(get_by_ID("4", lista)) == "economy"
+    assert get_pret(get_by_ID("1", lista)) == 100.0
+    assert get_pret(get_by_ID("2", lista)) == 20.0
+    assert get_pret(get_by_ID("3", lista)) == 80.0
+    assert get_pret(get_by_ID("4", lista)) == 10.0
+

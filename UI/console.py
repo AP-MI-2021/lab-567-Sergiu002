@@ -2,7 +2,7 @@ from Domain.rezervare import to_string
 from Logic.CRUD import Adauga_Rezervare, Sterge_Rezervare, Modifica_Rezervare
 from Logic.functionalitati import Trecerea_Rezervarilor_La_Clasa_Superioara, Ieftinirea_Rezervarilor_Cu_Un_Procentaj, \
     Determinarea_Pretului_Maxim_Pentru_Fiecare_Clasa, Ordonare_Descrescator_Pret, Sume_Preturi_Pentru_Fiecare_Nume, \
-    Adaugare_In_Lista_Nume
+    Adaugare_In_Lista_Nume, Lista_de_lista, Functia_Undo, Reducere_Len_Lista_de_Lista
 
 
 def Print_Menu():
@@ -14,6 +14,7 @@ def Print_Menu():
     print("6. Determinarea prețului maxim pentru fiecare clasă")
     print("7. Ordonarea rezervărilor descrescător după preț")
     print("8. Afișarea sumelor prețurilor pentru fiecare nume")
+    print("9. Undo")
     print("a. Afisare rezervari facute")
     print("x. Iesire")
 
@@ -127,6 +128,8 @@ def UI_Lista_de_rezervari():
     return lista
 
 def Run_Menu(lista):
+    Lista_lista = []
+    Lista_lista = Lista_de_lista(Lista_lista, lista)
     while True:
         Print_Menu()
         lista_nume = []
@@ -134,20 +137,32 @@ def Run_Menu(lista):
         Optiune = input("Dati optiunea: ")
         if Optiune == "1":
             lista = UI_Adauga_Rezervare(lista)
+            Lista_lista.append(lista)
         elif Optiune == "2":
             lista = UI_Sterge_Rezervare(lista)
+            Lista_lista.append(lista)
         elif Optiune == "3":
             lista = UI_Modifica_Rezervare(lista)
+            Lista_lista.append(lista)
         elif Optiune == "4":
             lista = UI_Trecerea_Rezervarilor_La_Clasa_Superioara(lista)
+            Lista_lista.append(lista)
         elif Optiune == "5":
             lista = UI_Ieftinirea_Rezervarilor_Cu_Un_Procentaj(lista)
+            Lista_lista.append(lista)
         elif Optiune == "6":
             UI_Determinarea_Pretului_Maxim_Pentru_Fiecare_Clasa(lista)
         elif Optiune == "7":
             lista = UI_Ordonare_Descrescator_Pret(lista)
+            Lista_lista.append(lista)
         elif Optiune == "8":
             UI_Sume_Preturi_Pentru_Fiecare_Nume(lista_nume, lista)
+        elif Optiune == "9":
+            if len(Lista_lista) > 1:
+                lista = Functia_Undo(Lista_lista)
+                Lista_lista = Reducere_Len_Lista_de_Lista(Lista_lista)
+            else:
+                print("Nu mai puteti da Undo")
         elif Optiune == "a":
             Show_All(lista)
         elif Optiune == "x":
