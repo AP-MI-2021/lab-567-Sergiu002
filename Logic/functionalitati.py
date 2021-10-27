@@ -94,7 +94,7 @@ def Ordonare_Descrescator_Pret(lista):
     :param lista: Lista rezervarilor
     :return: Lista ordonata descrescator dupa pretul rezervarilor
     '''
-    lista_noua = sorted(lista, key = lambda i: i[3], reverse = True)
+    lista_noua = sorted(lista, key = lambda i: get_pret(i), reverse = True)
     return lista_noua
 def Adaugare_In_Lista_Nume(lista_nume, lista):
     '''
@@ -134,7 +134,7 @@ def Sume_Preturi_Pentru_Fiecare_Nume(lista_nume, lista):
 def Lista_de_lista(Lista_lista, lista):
     '''
     Creeaza o lista de liste
-    :param Lista_lista: O lista care este plina cu liste de dictionare
+    :param Lista_lista: O lista care este plina cu liste de tuple-uri
     :param lista: Lista rezervarilor
     :return: Returneaza lista de liste creata
     '''
@@ -143,9 +143,9 @@ def Lista_de_lista(Lista_lista, lista):
 
 def Copiere_Lista_Fara_Ultimul_Parametru(Lista_lista):
     '''
-    Sterge ultima lista de dictionare din lista de lista de dictionare
-    :param Lista_lista: O lista care este plina cu liste de dictionare
-    :return: Returneaza o lista de liste de dictionare fara ultima lista de dictionare
+    Sterge ultima lista de dictionare din lista de lista de tuple-uri
+    :param Lista_lista: O lista care este plina cu liste de tuple-uri
+    :return: Returneaza o lista de liste de tuple-uri fara ultima lista de tuple-uri
     '''
     Lista_lista_noua = []
     for l in range(0, len(Lista_lista) - 1):
@@ -154,9 +154,9 @@ def Copiere_Lista_Fara_Ultimul_Parametru(Lista_lista):
 
 def Functia_Undo(Lista_lista):
     '''
-    Atribuie unei liste ultima lista din lista de lista de dictionare
-    :param Lista_lista: O lista care este plina cu liste de dictionare
-    :return: Returneaza Ultima lista de dictionare din lista de lista
+    Atribuie unei liste ultima lista din lista de lista de tuple-uri
+    :param Lista_lista: O lista care este plina cu liste de tuple-uri
+    :return: Returneaza Ultima lista de tuple-uri din lista de lista
     '''
     Lista_lista_noua = Copiere_Lista_Fara_Ultimul_Parametru(Lista_lista)
     lista = Lista_lista_noua[-1]
@@ -165,7 +165,7 @@ def Functia_Undo(Lista_lista):
 def Reducere_Len_Lista_de_Lista(Lista_lista):
     '''
     Reduce lungimea listei de liste
-    :param Lista_lista: O lista care este plina cu liste de dictionare
-    :return: Returneaza lista de liste de dictionare cu lungimea scazuta cu o unitate
+    :param Lista_lista: O lista care este plina cu liste de tuple-uri
+    :return: Returneaza lista de liste de tuple-uri cu lungimea scazuta cu o unitate
     '''
     return Copiere_Lista_Fara_Ultimul_Parametru(Lista_lista)
