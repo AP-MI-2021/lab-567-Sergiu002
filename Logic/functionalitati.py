@@ -94,7 +94,7 @@ def Ordonare_Descrescator_Pret(lista):
     :param lista: Lista rezervarilor
     :return: Lista ordonata descrescator dupa pretul rezervarilor
     '''
-    lista_noua = sorted(lista, key = lambda i: i["pret"], reverse = True)
+    lista_noua = sorted(lista, key = lambda i: i[3], reverse = True)
     return lista_noua
 def Adaugare_In_Lista_Nume(lista_nume, lista):
     '''

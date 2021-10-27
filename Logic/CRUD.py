@@ -23,7 +23,7 @@ def get_by_ID(ID, lista):
     :return: Returneaza rezervarea daca rezervarea cu ID-ul "ID" a fost gasita in lista, respectiv None in caz contrar
     '''
     for rezervare in lista:
-        if rezervare["ID"] == ID:
+        if rezervare[0] == ID:
             return rezervare
     return None
 

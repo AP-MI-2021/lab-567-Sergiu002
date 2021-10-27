@@ -40,7 +40,7 @@ def Test_Ordonare_Descrescator_Pret():
     lista = Adauga_Rezervare("2", "Franta", "economy", 20.0, "Nu", lista)
     lista = Adauga_Rezervare("3", "Romania", "economy plus", 80.0, "Da", lista)
     lista = Adauga_Rezervare("4", "Belgia", "economy", 10.0, "Nu", lista)
-    lista = [rezervare['pret'] for rezervare in Ordonare_Descrescator_Pret(lista)]
+    lista = [rezervare[3] for rezervare in Ordonare_Descrescator_Pret(lista)]
 
     assert lista == [100.0, 80.0, 20.0, 10.0]
 
