@@ -12,9 +12,21 @@ def Adauga_Rezervare(ID, nume, clasa, pret, checkin, lista):
     :param lista: Lista rezervarilor
     :return: Returneaza lista veche + rezervarea noua
     '''
+    if get_by_ID(ID, lista) is not None:
+        raise ValueError("Id-ul exista deja!")
     rezervare_noua = Creeaza_Rezervare(ID, nume, clasa, pret, checkin)
     return lista + [rezervare_noua]
-
+def get_by_Nume(nume, lista):
+    '''
+    Cauta daca exista o rezerare cu numele "nume" in lista de rezervari
+    :param nume: Numele rezervarii pe care o cautam
+    :param lista: Lista rezervarilor
+    :return: Returneaza rezervarea daca aceasta a fost gasita in lista sau None in caz contrar
+    '''
+    for rezervare in lista:
+        if rezervare[1] == nume:
+            return rezervare
+    return None
 def get_by_ID(ID, lista):
     '''
     Cauta daca exista o rezervare cu ID-ul "ID" in lista de rezervari

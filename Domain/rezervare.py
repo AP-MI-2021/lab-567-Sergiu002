@@ -56,7 +56,7 @@ def to_string(rezervare):
     :param rezervare: un tuple de tip rezervare
     :return:
     '''
-    return "ID: {}, nume: {}, clasa: {}, pret: {}, checkin: {}".format(
+    return "\033[32mID: {}, nume: {}, clasa: {}, pret: {}, checkin: {}".format(
         get_ID(rezervare),
         get_nume(rezervare),
         get_clasa(rezervare),
