@@ -104,15 +104,17 @@ def UI_Trecerea_Rezervarilor_La_Clasa_Superioara(lista):
         return lista
 
 def UI_Ieftinirea_Rezervarilor_Cu_Un_Procentaj(lista):
-    procent = input("\033[36mDati un procent de forma \033[32m'ab%': ")
-    ok = True
-    if procent[len(procent) - 1] != "%":
-        print("\033[31mNu ati introdus un procentaj corect")
-        while procent[len(procent) - 1] != "%":
-            procent = input("\033[36mDati un procent de forma \033[32m'ab%': ")
-            if procent[len(procent) - 1] != "%":
-                print("\033[31mNu ati introdus un procentaj corect")
-    return Ieftinirea_Rezervarilor_Cu_Un_Procentaj(procent, lista)
+    while True:
+        procent = input("\033[36mDati un procent de forma \033[32m'ab%': ")
+        if procent[len(procent) - 1] != "%":
+            print("\033[31mNu ati introdus un procentaj corect")
+        else:
+            try:
+                proc = procent[0: len(procent) - 1]
+                return Ieftinirea_Rezervarilor_Cu_Un_Procentaj(procent, lista)
+            except ValueError as ve:
+                print("\033[31mEroare: {}".format(ve))
+                return lista
 
 def UI_Determinarea_Pretului_Maxim_Pentru_Fiecare_Clasa(lista):
     print(Determinarea_Pretului_Maxim_Pentru_Fiecare_Clasa(lista))

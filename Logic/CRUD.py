@@ -13,7 +13,7 @@ def Adauga_Rezervare(ID, nume, clasa, pret, checkin, lista):
     :return: Returneaza lista veche + rezervarea noua
     '''
     if get_by_ID(ID, lista) is not None:
-        raise ValueError("Id-ul exista deja!")
+        raise ValueError("\033[31mId-ul exista deja!")
     rezervare_noua = Creeaza_Rezervare(ID, nume, clasa, pret, checkin)
     return lista + [rezervare_noua]
 def get_by_Nume(nume, lista):
