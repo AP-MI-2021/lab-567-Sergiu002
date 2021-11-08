@@ -23,6 +23,7 @@ def Citeste_In_Linie():
             lista_mica.append(cuvant[y])
         lista_mare.append(lista_mica)
     return lista_mare
+
 def UI_Adauga_O_Rezervare(lista, lista_mea):
         '''
         Adauga o rezervare in lista noastra
@@ -112,3 +113,5 @@ def Run_MENU(lista_rezervari):
                 lista_rezervari = UI_Modifica_O_Rezervare(lista_rezervari, lista_noua)
             elif lista[0] == lista_comenzi[3]:
                 Show_All(lista_rezervari)
+
+

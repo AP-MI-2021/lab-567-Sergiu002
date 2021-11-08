@@ -1,8 +1,7 @@
 from Domain.rezervare import get_clasa, get_pret
-from Logic.CRUD import Adauga_Rezervare, get_by_ID
+from Logic.CRUD import Adauga_Rezervare, get_by_ID, Sterge_Rezervare
 from Logic.functionalitati import Trecerea_Rezervarilor_La_Clasa_Superioara, Ieftinirea_Rezervarilor_Cu_Un_Procentaj, \
-    Determinarea_Pretului_Maxim_Pentru_Fiecare_Clasa, Ordonare_Descrescator_Pret, Sume_Preturi_Pentru_Fiecare_Nume, \
-    Lista_de_lista, Functia_Undo
+    Determinarea_Pretului_Maxim_Pentru_Fiecare_Clasa, Ordonare_Descrescator_Pret, Sume_Preturi_Pentru_Fiecare_Nume
 
 
 def Test_Trecerea_Rezervarilor_La_Clasa_Superioara():
@@ -16,6 +15,32 @@ def Test_Trecerea_Rezervarilor_La_Clasa_Superioara():
     assert get_clasa(get_by_ID("2", lista)) == "economy plus"
     assert get_clasa(get_by_ID("1", lista)) == "business"
 
+def Test_Trecerea_Rezervarilor_La_Clasa_Superioara_Undo_Redo():
+    undo_operations = []
+    redo_operations = []
+    lista = Adauga_Rezervare("1", "Franta", "economy plus", 100.0, "Da", [])
+    lista = Adauga_Rezervare("2", "Franta", "economy", 20.0, "Nu", lista)
+    lista = Adauga_Rezervare("3", "Rusia", "economy", 30.0, "Nu", lista)
+    lista = Adauga_Rezervare("4", "Rusia", "business", 240.0, "Nu", lista)
+    lista = Adauga_Rezervare("5", "China", "economy plus", 100.0, "Nu", lista)
+    lista_noua = Trecerea_Rezervarilor_La_Clasa_Superioara("Franta", lista)
+    assert get_clasa(get_by_ID("2", lista_noua)) == "economy plus"
+    assert get_clasa(get_by_ID("1", lista_noua)) == "business"
+    undo_operations.append([lambda: lista, lambda: lista_noua])
+    redo_operations.clear()
+    if len(undo_operations) > 0:
+        operations = undo_operations.pop()
+        redo_operations.append(operations)
+        lista = operations[0]()
+    assert get_clasa(get_by_ID("2", lista)) == "economy"
+    assert get_clasa(get_by_ID("1", lista)) == "economy plus"
+    if len(redo_operations) > 0:
+        operations = redo_operations.pop()
+        undo_operations.append(operations)
+        lista = operations[1]()
+    assert get_clasa(get_by_ID("2", lista)) == "economy plus"
+    assert get_clasa(get_by_ID("1", lista)) == "business"
+
 def Test_Ieftinirea_Rezervarilor_Cu_Un_Procentaj():
     lista = Adauga_Rezervare("1", "Franta", "economy plus", 100.0, "Da", [])
     lista = Adauga_Rezervare("2", "Franta", "economy", 20.0, "Nu", lista)
@@ -25,6 +50,32 @@ def Test_Ieftinirea_Rezervarilor_Cu_Un_Procentaj():
     lista = Ieftinirea_Rezervarilor_Cu_Un_Procentaj("10%", lista)
 
     assert get_pret(get_by_ID("1",lista)) == 90
+
+def Test_Ieftinirea_Rezervarilor_Cu_Un_Procentaj_Undo_Redo():
+    undo_operations = []
+    redo_operations = []
+    lista = Adauga_Rezervare("1", "Franta", "economy plus", 100.0, "Da", [])
+    lista = Adauga_Rezervare("2", "Franta", "economy", 20.0, "Nu", lista)
+    lista = Adauga_Rezervare("3", "Rusia", "economy", 30.0, "Nu", lista)
+    lista = Adauga_Rezervare("4", "Rusia", "business", 240.0, "Nu", lista)
+    lista = Adauga_Rezervare("5", "China", "economy plus", 100.0, "Nu", lista)
+    lista_noua = Ieftinirea_Rezervarilor_Cu_Un_Procentaj("10%", lista)
+    assert get_pret(get_by_ID("2", lista_noua)) == 20
+    assert get_pret(get_by_ID("1", lista_noua)) == 90
+    undo_operations.append([lambda: lista, lambda: lista_noua])
+    redo_operations.clear()
+    if len(undo_operations) > 0:
+        operations = undo_operations.pop()
+        redo_operations.append(operations)
+        lista = operations[0]()
+    assert get_pret(get_by_ID("2", lista)) == 20
+    assert get_pret(get_by_ID("1", lista)) == 100
+    if len(redo_operations) > 0:
+        operations = redo_operations.pop()
+        undo_operations.append(operations)
+        lista = operations[1]()
+    assert get_pret(get_by_ID("2", lista)) == 20
+    assert get_pret(get_by_ID("1", lista)) == 90
 
 def Test_Determinarea_Pretului_Maxim_Pentru_Fiecare_Clasa():
     lista = Adauga_Rezervare("1", "Rusia", "economy plus", 100.0, "Da", [])
@@ -44,6 +95,31 @@ def Test_Ordonare_Descrescator_Pret():
 
     assert lista == [100.0, 80.0, 20.0, 10.0]
 
+def Test_Ordonare_Descrescator_Pret_Undo_Redo():
+    undo_operations = []
+    redo_operations = []
+    lista = Adauga_Rezervare("1", "Germaina", "economy plus", 100.0, "Da", [])
+    lista = Adauga_Rezervare("2", "Franta", "economy", 20.0, "Nu", lista)
+    lista = Adauga_Rezervare("3", "Romania", "economy plus", 80.0, "Da", lista)
+    lista = Adauga_Rezervare("4", "Belgia", "economy", 10.0, "Nu", lista)
+    lista_noua = [rezervare for rezervare in Ordonare_Descrescator_Pret(lista)]
+    lista_preturi = [rezervare[3] for rezervare in lista_noua]
+    assert lista_preturi == [100.0, 80.0, 20.0, 10.0]
+    undo_operations.append([lambda: lista, lambda: lista_noua])
+    redo_operations.clear()
+    if len(undo_operations) > 0:
+        operations = undo_operations.pop()
+        redo_operations.append(operations)
+        lista = operations[0]()
+    lista_preturi = [rezervare[3] for rezervare in lista]
+    assert lista_preturi == [100.0, 20.0, 80.0, 10.0]
+    if len(redo_operations) > 0:
+        operations = redo_operations.pop()
+        undo_operations.append(operations)
+        lista = operations[1]()
+    lista_preturi = [rezervare[3] for rezervare in lista]
+    assert lista_preturi == [100.0, 80.0, 20.0, 10.0]
+
 def Test_Sume_Preturi_Pentru_Fiecare_Nume():
     lista = Adauga_Rezervare("1", "Ucraina", "economy plus", 100.0, "Da", [])
     lista = Adauga_Rezervare("2", "Ucraina", "economy", 20.0, "Nu", lista)
@@ -53,21 +129,111 @@ def Test_Sume_Preturi_Pentru_Fiecare_Nume():
 
     assert lista_sume == [130.0, 80.0]
 
-def Test_Functia_Undo():
-    lista = Adauga_Rezervare("1", "Ucraina", "economy plus", 100.0, "Da", [])
+def Test_Functia_Undo_Si_Redo():
+    undo_operations = []
+    redo_operations = []
+    lista = []
+    lista = Adauga_Rezervare("1", "Ucraina", "economy plus", 100.0, "Da", lista)
+    undo_operations.append([lambda: Sterge_Rezervare('1', lista), lambda: Adauga_Rezervare("1", "Ucraina", "economy plus", 100.0, "Da", lista)])
+    redo_operations.clear()
     lista = Adauga_Rezervare("2", "Ucraina", "economy", 20.0, "Nu", lista)
+    undo_operations.append([lambda: Sterge_Rezervare('2', lista), lambda: Adauga_Rezervare("2", "Ucraina", "economy", 20.0, "Nu", lista)])
+    redo_operations.clear()
     lista = Adauga_Rezervare("3", "Austria", "economy plus", 80.0, "Da", lista)
+    undo_operations.append([lambda: Sterge_Rezervare('3', lista), lambda: Adauga_Rezervare("3", "Austria", "economy plus", 80.0, "Da", lista)])
+    redo_operations.clear()
+    if len(undo_operations) > 0:
+        operations = undo_operations.pop()
+        redo_operations.append(operations)
+        lista = operations[0]()
+    assert lista[0] == ("1", "Ucraina", "economy plus", 100.0, "Da")
+    assert lista[1] == ("2", "Ucraina", "economy", 20.0, "Nu")
+    assert get_by_ID("3", lista) is None
+    if len(undo_operations) > 0:
+        operations = undo_operations.pop()
+        redo_operations.append(operations)
+        lista = operations[0]()
+    assert lista[0] == ("1", "Ucraina", "economy plus", 100.0, "Da")
+    assert get_by_ID("2", lista) is None
+    assert get_by_ID("3", lista) is None
+    if len(undo_operations) > 0:
+        operations = undo_operations.pop()
+        redo_operations.append(operations)
+        lista = operations[0]()
+    assert get_by_ID("1", lista) is None
+    assert get_by_ID("2", lista) is None
+    assert get_by_ID("3", lista) is None
+    if len(undo_operations) > 0:
+        operations = undo_operations.pop()
+        redo_operations.append(operations)
+        lista = operations[0]()
+    assert get_by_ID("1", lista) is None
+    assert get_by_ID("2", lista) is None
+    assert get_by_ID("3", lista) is None
+    lista = Adauga_Rezervare("1", "Ucraina", "economy plus", 100.0, "Da", lista)
+    undo_operations.append([lambda: Sterge_Rezervare('1', lista), lambda: Adauga_Rezervare("1", "Ucraina", "economy plus", 100.0, "Da", lista)])
+    redo_operations.clear()
+    lista = Adauga_Rezervare("2", "Ucraina", "economy", 20.0, "Nu", lista)
+    undo_operations.append([lambda: Sterge_Rezervare('2', lista), lambda: Adauga_Rezervare("2", "Ucraina", "economy", 20.0, "Nu", lista)])
+    redo_operations.clear()
+    lista = Adauga_Rezervare("3", "Austria", "economy plus", 80.0, "Da", lista)
+    undo_operations.append([lambda: Sterge_Rezervare('3', lista), lambda: Adauga_Rezervare("3", "Austria", "economy plus", 80.0, "Da", lista)])
+    redo_operations.clear()
+    if len(redo_operations) > 0:
+        operations = redo_operations.pop()
+        undo_operations.append(operations)
+        lista = operations[1]()
+    assert lista[0] == ("1", "Ucraina", "economy plus", 100.0, "Da")
+    assert lista[1] == ("2", "Ucraina", "economy", 20.0, "Nu")
+    assert lista[2] == ("3", "Austria", "economy plus", 80.0, "Da")
+    if len(undo_operations) > 0:
+        operations = undo_operations.pop()
+        redo_operations.append(operations)
+        lista = operations[0]()
+    assert lista[0] == ("1", "Ucraina", "economy plus", 100.0, "Da")
+    assert lista[1] == ("2", "Ucraina", "economy", 20.0, "Nu")
+    assert get_by_ID("3", lista) is None
+    if len(undo_operations) > 0:
+        operations = undo_operations.pop()
+        redo_operations.append(operations)
+        lista = operations[0]()
+    assert lista[0] == ("1", "Ucraina", "economy plus", 100.0, "Da")
+    assert get_by_ID("2", lista) is None
+    assert get_by_ID("3", lista) is None
     lista = Adauga_Rezervare("4", "Ucraina", "economy", 10.0, "Nu", lista)
-    Lista_lista = []
-    Lista_lista = Lista_de_lista(Lista_lista, lista)
-    if len(Lista_lista) > 1:
-        lista = Functia_Undo(Lista_lista)
-    assert get_clasa(get_by_ID("1", lista)) == "economy plus"
-    assert get_clasa(get_by_ID("2", lista)) == "economy"
-    assert get_clasa(get_by_ID("3", lista)) == "economy plus"
-    assert get_clasa(get_by_ID("4", lista)) == "economy"
-    assert get_pret(get_by_ID("1", lista)) == 100.0
-    assert get_pret(get_by_ID("2", lista)) == 20.0
-    assert get_pret(get_by_ID("3", lista)) == 80.0
-    assert get_pret(get_by_ID("4", lista)) == 10.0
-
+    undo_operations.append([lambda: Sterge_Rezervare('4', lista), lambda: Adauga_Rezervare("4", "Ucraina", "economy", 10.0, "Nu", lista)])
+    redo_operations.clear()
+    if len(redo_operations) > 0:
+        operations = redo_operations.pop()
+        undo_operations.append(operations)
+        lista = operations[1]()
+    assert lista[0] == ("1", "Ucraina", "economy plus", 100.0, "Da")
+    assert lista[1] == ("4", "Ucraina", "economy", 10.0, "Nu")
+    if len(undo_operations) > 0:
+        operations = undo_operations.pop()
+        redo_operations.append(operations)
+        lista = operations[0]()
+    assert lista[0] == ("1", "Ucraina", "economy plus", 100.0, "Da")
+    assert get_by_ID('4', lista) is None
+    if len(undo_operations) > 0:
+        operations = undo_operations.pop()
+        redo_operations.append(operations)
+        lista = operations[0]()
+    assert get_by_ID('1', lista) is None
+    assert get_by_ID('4', lista) is None
+    if len(redo_operations) > 0:
+        operations = redo_operations.pop()
+        undo_operations.append(operations)
+        lista = operations[1]()
+    if len(redo_operations) > 0:
+        operations = redo_operations.pop()
+        undo_operations.append(operations)
+        lista = operations[1]()
+    assert lista[0] == ("1", "Ucraina", "economy plus", 100.0, "Da")
+    assert lista[1] == ("4", "Ucraina", "economy", 10.0, "Nu")
+    if len(redo_operations) > 0:
+        operations = redo_operations.pop()
+        undo_operations.append(operations)
+        lista = operations[1]()
+    assert lista[0] == ("1", "Ucraina", "economy plus", 100.0, "Da")
+    assert lista[1] == ("4", "Ucraina", "economy", 10.0, "Nu")
