@@ -132,12 +132,27 @@ def Sume_Preturi_Pentru_Fiecare_Nume(lista_nume, lista):
     return lista_sume
 
 def Undo(lista, undo_operations, redo_operations):
+    '''
+    Afiseaza lista anterioara modificarii efectuate
+    :param lista: lista rezervarilor
+    :param undo_operations: operatiile de undo (functionalitati)
+    :param redo_operations: operatiile de redo (functionalitati)
+    :return: Returneaza lista in urma unui Undo
+    '''
     operations = undo_operations.pop()
     redo_operations.append(operations)
     lista = operations[0]()
     return lista
 
 def Redo(lista, undo_operations, redo_operations):
+    '''
+    Doar daca s-a facut undo se poate aplica redo-ul
+    Afiseaza lista modificata
+    :param lista: lista rezervarilor
+    :param undo_operations: operatiile de undo (functionalitati)
+    :param redo_operations: operatiile de redo (functionalitati)
+    :return: Returneaza lista in urma unui Redo
+    '''
     operations = redo_operations.pop()
     undo_operations.append(operations)
     lista = operations[1]()

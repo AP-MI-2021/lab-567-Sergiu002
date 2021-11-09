@@ -24,77 +24,80 @@ def Citeste_In_Linie():
         lista_mare.append(lista_mica)
     return lista_mare
 
+
 def UI_Adauga_O_Rezervare(lista, lista_mea):
-        '''
-        Adauga o rezervare in lista noastra
-        :param lista: lista de rezervari
-        :param lista_mea: lista care contine rezervarea mea curenta care trebuie adaugata in lista de rezervari
-        :return:
-        '''
-        try:
-            ID = lista_mea[0]
-            nume = lista_mea[1]
-            clasa = lista_mea[2]
-            if clasa != "economy" and clasa != "economy plus" and clasa != "business":
-                print("\033[31mNu ati introdus o clasa existenta!!!")
-                return lista
-            checkin = lista_mea[4]
-            if checkin != "Da" and checkin != "Nu":
-                print("\033[31mNu ati introdus Da sau Nu")
-                return lista
-            pret = float(lista_mea[3])
-            return Adauga_Rezervare(lista_mea[0], lista_mea[1], lista_mea[2], float(lista_mea[3]), lista_mea[4], lista)
-        except IndexError as ve:
-            print("\033[31mEroare: {}".format(ve))
+    '''
+    Adauga o rezervare in lista noastra
+    :param lista: lista de rezervari
+    :param lista_mea: lista care contine rezervarea mea curenta care trebuie adaugata in lista de rezervari
+    :return:
+    '''
+    try:
+        ID = lista_mea[0]
+        nume = lista_mea[1]
+        clasa = lista_mea[2]
+        if clasa != "economy" and clasa != "economy plus" and clasa != "business":
+            print("\033[31mNu ati introdus o clasa existenta!!!")
             return lista
-        except ValueError as ve:
-            print("\033[31mEroare: {}".format(ve))
+        checkin = lista_mea[4]
+        if checkin != "Da" and checkin != "Nu":
+            print("\033[31mNu ati introdus Da sau Nu")
             return lista
+        pret = float(lista_mea[3])
+        return Adauga_Rezervare(lista_mea[0], lista_mea[1], lista_mea[2], float(lista_mea[3]), lista_mea[4], lista)
+    except IndexError as ve:
+        print("\033[31mEroare: {}".format(ve))
+        return lista
+    except ValueError as ve:
+        print("\033[31mEroare: {}".format(ve))
+        return lista
+
 
 def UI_Sterge_O_Rezervare(lista, lista_mea):
-        '''
-        Sterge o rezervare in lista noastra
-        :param lista: lista de rezervari
-        :param lista_mea: lista care contine rezervarea mea curenta care trebuie adaugata in lista de rezervari
-        :return:
-        '''
-        try:
-            ID = lista_mea[0]
-            if get_by_ID(ID, lista) is None:
-                print("\033[31mId-ul nu exista!")
-                return lista
-            else:
-                return Sterge_Rezervare(lista_mea[0], lista)
-        except IndexError as ve:
-            print("\033[31mEroare: {}".format(ve))
+    '''
+    Sterge o rezervare in lista noastra
+    :param lista: lista de rezervari
+    :param lista_mea: lista care contine rezervarea mea curenta care trebuie adaugata in lista de rezervari
+    :return:
+    '''
+    try:
+        ID = lista_mea[0]
+        if get_by_ID(ID, lista) is None:
+            print("\033[31mId-ul nu exista!")
             return lista
+        else:
+            return Sterge_Rezervare(lista_mea[0], lista)
+    except IndexError as ve:
+        print("\033[31mEroare: {}".format(ve))
+        return lista
+
+
 def UI_Modifica_O_Rezervare(lista, lista_mea):
-        '''
-        Modifica o rezervare in lista noastra
-        :param lista: lista de rezervari
-        :param lista_mea: lista care contine rezervarea mea curenta care trebuie adaugata in lista de rezervari
-        :return:
-        '''
-        try:
-            ID = lista_mea[0]
-            nume = lista_mea[1]
-            clasa = lista_mea[2]
-            if clasa != "economy" and clasa != "economy plus" and clasa != "business":
-                print("\033[31mNu ati introdus o clasa existenta!!!")
-                return lista
-            checkin = lista_mea[4]
-            if checkin != "Da" and checkin != "Nu":
-                print("\033[31mNu ati introdus Da sau Nu")
-                return lista
-            pret = float(lista_mea[3])
-            return Modifica_Rezervare(lista_mea[0], lista_mea[1], lista_mea[2], float(lista_mea[3]), lista_mea[4],
-                                      lista)
-        except IndexError as ve:
-            print("\033[31mEroare: {}".format(ve))
+    '''
+    Modifica o rezervare in lista noastra
+    :param lista: lista de rezervari
+    :param lista_mea: lista care contine rezervarea mea curenta care trebuie adaugata in lista de rezervari
+    :return:
+    '''
+    try:
+        ID = lista_mea[0]
+        nume = lista_mea[1]
+        clasa = lista_mea[2]
+        if clasa != "economy" and clasa != "economy plus" and clasa != "business":
+            print("\033[31mNu ati introdus o clasa existenta!!!")
             return lista
-        except ValueError as ve:
-            print("\033[31mEroare: {}".format(ve))
+        checkin = lista_mea[4]
+        if checkin != "Da" and checkin != "Nu":
+            print("\033[31mNu ati introdus Da sau Nu")
             return lista
+        pret = float(lista_mea[3])
+        return Modifica_Rezervare(lista_mea[0], lista_mea[1], lista_mea[2], float(lista_mea[3]), lista_mea[4], lista)
+    except IndexError as ve:
+        print("\033[31mEroare: {}".format(ve))
+        return lista
+    except ValueError as ve:
+        print("\033[31mEroare: {}".format(ve))
+        return lista
 
 
 def Run_MENU(lista_rezervari):
@@ -113,5 +116,3 @@ def Run_MENU(lista_rezervari):
                 lista_rezervari = UI_Modifica_O_Rezervare(lista_rezervari, lista_noua)
             elif lista[0] == lista_comenzi[3]:
                 Show_All(lista_rezervari)
-
-
