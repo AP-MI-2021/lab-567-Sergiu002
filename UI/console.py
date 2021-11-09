@@ -2,7 +2,7 @@ from Domain.rezervare import to_string, get_nume, get_clasa, get_pret, get_check
 from Logic.CRUD import Adauga_Rezervare, Sterge_Rezervare, Modifica_Rezervare, get_by_ID, get_by_Nume
 from Logic.functionalitati import Trecerea_Rezervarilor_La_Clasa_Superioara, Ieftinirea_Rezervarilor_Cu_Un_Procentaj, \
     Determinarea_Pretului_Maxim_Pentru_Fiecare_Clasa, Ordonare_Descrescator_Pret, Sume_Preturi_Pentru_Fiecare_Nume, \
-    Adaugare_In_Lista_Nume, Lista_de_lista, Functia_Undo, Reducere_Len_Lista_de_Lista
+    Adaugare_In_Lista_Nume, Undo, Redo
 
 
 def Print_Menu():
@@ -220,16 +220,12 @@ def Run_Menu(lista):
             UI_Sume_Preturi_Pentru_Fiecare_Nume(lista_nume, lista)
         elif Optiune == 'u':
             if len(undo_operations) > 0:
-                operations = undo_operations.pop()
-                redo_operations.append(operations)
-                lista = operations[0]()
+                lista = Undo(lista, undo_operations, redo_operations)
             else:
                 print("\033[31mNu se poate face Undo")
         elif Optiune == "r":
             if len(redo_operations) > 0:
-                operations = redo_operations.pop()
-                undo_operations.append(operations)
-                lista = operations[1]()
+                lista = Redo(lista, undo_operations, redo_operations)
             else:
                 print("\033[31mNu se poate face Redo")
         elif Optiune == "a":

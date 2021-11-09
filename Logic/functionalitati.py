@@ -131,41 +131,14 @@ def Sume_Preturi_Pentru_Fiecare_Nume(lista_nume, lista):
         lista_sume.append(Suma_Preturi_Pentru_Un_Nume(rezervare_nume, lista))
     return lista_sume
 
-def Lista_de_lista(Lista_lista, lista):
-    '''
-    Creeaza o lista de liste
-    :param Lista_lista: O lista care este plina cu liste de tuple-uri
-    :param lista: Lista rezervarilor
-    :return: Returneaza lista de liste creata
-    '''
-    Lista_lista.append(lista)
-    return Lista_lista
-
-def Copiere_Lista_Fara_Ultimul_Parametru(Lista_lista):
-    '''
-    Sterge ultima lista de dictionare din lista de lista de tuple-uri
-    :param Lista_lista: O lista care este plina cu liste de tuple-uri
-    :return: Returneaza o lista de liste de tuple-uri fara ultima lista de tuple-uri
-    '''
-    Lista_lista_noua = []
-    for l in range(0, len(Lista_lista) - 1):
-        Lista_lista_noua.append(Lista_lista[l])
-    return Lista_lista_noua
-
-def Functia_Undo(Lista_lista):
-    '''
-    Atribuie unei liste ultima lista din lista de lista de tuple-uri
-    :param Lista_lista: O lista care este plina cu liste de tuple-uri
-    :return: Returneaza Ultima lista de tuple-uri din lista de lista
-    '''
-    Lista_lista_noua = Copiere_Lista_Fara_Ultimul_Parametru(Lista_lista)
-    lista = Lista_lista_noua[-1]
+def Undo(lista, undo_operations, redo_operations):
+    operations = undo_operations.pop()
+    redo_operations.append(operations)
+    lista = operations[0]()
     return lista
 
-def Reducere_Len_Lista_de_Lista(Lista_lista):
-    '''
-    Reduce lungimea listei de liste
-    :param Lista_lista: O lista care este plina cu liste de tuple-uri
-    :return: Returneaza lista de liste de tuple-uri cu lungimea scazuta cu o unitate
-    '''
-    return Copiere_Lista_Fara_Ultimul_Parametru(Lista_lista)
+def Redo(lista, undo_operations, redo_operations):
+    operations = redo_operations.pop()
+    undo_operations.append(operations)
+    lista = operations[1]()
+    return lista

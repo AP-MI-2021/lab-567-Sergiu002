@@ -1,7 +1,8 @@
 from Domain.rezervare import get_clasa, get_pret
 from Logic.CRUD import Adauga_Rezervare, get_by_ID, Sterge_Rezervare
 from Logic.functionalitati import Trecerea_Rezervarilor_La_Clasa_Superioara, Ieftinirea_Rezervarilor_Cu_Un_Procentaj, \
-    Determinarea_Pretului_Maxim_Pentru_Fiecare_Clasa, Ordonare_Descrescator_Pret, Sume_Preturi_Pentru_Fiecare_Nume
+    Determinarea_Pretului_Maxim_Pentru_Fiecare_Clasa, Ordonare_Descrescator_Pret, Sume_Preturi_Pentru_Fiecare_Nume, \
+    Undo, Redo
 
 
 def Test_Trecerea_Rezervarilor_La_Clasa_Superioara():
@@ -29,15 +30,11 @@ def Test_Trecerea_Rezervarilor_La_Clasa_Superioara_Undo_Redo():
     undo_operations.append([lambda: lista, lambda: lista_noua])
     redo_operations.clear()
     if len(undo_operations) > 0:
-        operations = undo_operations.pop()
-        redo_operations.append(operations)
-        lista = operations[0]()
+        lista = Undo(lista, undo_operations, redo_operations)
     assert get_clasa(get_by_ID("2", lista)) == "economy"
     assert get_clasa(get_by_ID("1", lista)) == "economy plus"
     if len(redo_operations) > 0:
-        operations = redo_operations.pop()
-        undo_operations.append(operations)
-        lista = operations[1]()
+        lista = Redo(lista, undo_operations, redo_operations)
     assert get_clasa(get_by_ID("2", lista)) == "economy plus"
     assert get_clasa(get_by_ID("1", lista)) == "business"
 
@@ -65,15 +62,11 @@ def Test_Ieftinirea_Rezervarilor_Cu_Un_Procentaj_Undo_Redo():
     undo_operations.append([lambda: lista, lambda: lista_noua])
     redo_operations.clear()
     if len(undo_operations) > 0:
-        operations = undo_operations.pop()
-        redo_operations.append(operations)
-        lista = operations[0]()
+        lista = Undo(lista, undo_operations, redo_operations)
     assert get_pret(get_by_ID("2", lista)) == 20
     assert get_pret(get_by_ID("1", lista)) == 100
     if len(redo_operations) > 0:
-        operations = redo_operations.pop()
-        undo_operations.append(operations)
-        lista = operations[1]()
+        lista = Redo(lista, undo_operations, redo_operations)
     assert get_pret(get_by_ID("2", lista)) == 20
     assert get_pret(get_by_ID("1", lista)) == 90
 
@@ -108,15 +101,11 @@ def Test_Ordonare_Descrescator_Pret_Undo_Redo():
     undo_operations.append([lambda: lista, lambda: lista_noua])
     redo_operations.clear()
     if len(undo_operations) > 0:
-        operations = undo_operations.pop()
-        redo_operations.append(operations)
-        lista = operations[0]()
+        lista = Undo(lista,undo_operations, redo_operations)
     lista_preturi = [rezervare[3] for rezervare in lista]
     assert lista_preturi == [100.0, 20.0, 80.0, 10.0]
     if len(redo_operations) > 0:
-        operations = redo_operations.pop()
-        undo_operations.append(operations)
-        lista = operations[1]()
+        lista = Redo(lista, undo_operations, redo_operations)
     lista_preturi = [rezervare[3] for rezervare in lista]
     assert lista_preturi == [100.0, 80.0, 20.0, 10.0]
 
@@ -143,30 +132,22 @@ def Test_Functia_Undo_Si_Redo():
     undo_operations.append([lambda: Sterge_Rezervare('3', lista), lambda: Adauga_Rezervare("3", "Austria", "economy plus", 80.0, "Da", lista)])
     redo_operations.clear()
     if len(undo_operations) > 0:
-        operations = undo_operations.pop()
-        redo_operations.append(operations)
-        lista = operations[0]()
+        lista = Undo(lista, undo_operations, redo_operations)
     assert lista[0] == ("1", "Ucraina", "economy plus", 100.0, "Da")
     assert lista[1] == ("2", "Ucraina", "economy", 20.0, "Nu")
     assert get_by_ID("3", lista) is None
     if len(undo_operations) > 0:
-        operations = undo_operations.pop()
-        redo_operations.append(operations)
-        lista = operations[0]()
+        lista = Undo(lista, undo_operations, redo_operations)
     assert lista[0] == ("1", "Ucraina", "economy plus", 100.0, "Da")
     assert get_by_ID("2", lista) is None
     assert get_by_ID("3", lista) is None
     if len(undo_operations) > 0:
-        operations = undo_operations.pop()
-        redo_operations.append(operations)
-        lista = operations[0]()
+        lista = Undo(lista, undo_operations, redo_operations)
     assert get_by_ID("1", lista) is None
     assert get_by_ID("2", lista) is None
     assert get_by_ID("3", lista) is None
     if len(undo_operations) > 0:
-        operations = undo_operations.pop()
-        redo_operations.append(operations)
-        lista = operations[0]()
+        lista = Undo(lista, undo_operations, redo_operations)
     assert get_by_ID("1", lista) is None
     assert get_by_ID("2", lista) is None
     assert get_by_ID("3", lista) is None
@@ -180,23 +161,17 @@ def Test_Functia_Undo_Si_Redo():
     undo_operations.append([lambda: Sterge_Rezervare('3', lista), lambda: Adauga_Rezervare("3", "Austria", "economy plus", 80.0, "Da", lista)])
     redo_operations.clear()
     if len(redo_operations) > 0:
-        operations = redo_operations.pop()
-        undo_operations.append(operations)
-        lista = operations[1]()
+        lista = Redo(lista, undo_operations, redo_operations)
     assert lista[0] == ("1", "Ucraina", "economy plus", 100.0, "Da")
     assert lista[1] == ("2", "Ucraina", "economy", 20.0, "Nu")
     assert lista[2] == ("3", "Austria", "economy plus", 80.0, "Da")
     if len(undo_operations) > 0:
-        operations = undo_operations.pop()
-        redo_operations.append(operations)
-        lista = operations[0]()
+        lista = Undo(lista, undo_operations, redo_operations)
     assert lista[0] == ("1", "Ucraina", "economy plus", 100.0, "Da")
     assert lista[1] == ("2", "Ucraina", "economy", 20.0, "Nu")
     assert get_by_ID("3", lista) is None
     if len(undo_operations) > 0:
-        operations = undo_operations.pop()
-        redo_operations.append(operations)
-        lista = operations[0]()
+        lista = Undo(lista, undo_operations, redo_operations)
     assert lista[0] == ("1", "Ucraina", "economy plus", 100.0, "Da")
     assert get_by_ID("2", lista) is None
     assert get_by_ID("3", lista) is None
@@ -204,36 +179,24 @@ def Test_Functia_Undo_Si_Redo():
     undo_operations.append([lambda: Sterge_Rezervare('4', lista), lambda: Adauga_Rezervare("4", "Ucraina", "economy", 10.0, "Nu", lista)])
     redo_operations.clear()
     if len(redo_operations) > 0:
-        operations = redo_operations.pop()
-        undo_operations.append(operations)
-        lista = operations[1]()
+        lista = Redo(lista, undo_operations, redo_operations)
     assert lista[0] == ("1", "Ucraina", "economy plus", 100.0, "Da")
     assert lista[1] == ("4", "Ucraina", "economy", 10.0, "Nu")
     if len(undo_operations) > 0:
-        operations = undo_operations.pop()
-        redo_operations.append(operations)
-        lista = operations[0]()
+        lista = Undo(lista, undo_operations, redo_operations)
     assert lista[0] == ("1", "Ucraina", "economy plus", 100.0, "Da")
     assert get_by_ID('4', lista) is None
     if len(undo_operations) > 0:
-        operations = undo_operations.pop()
-        redo_operations.append(operations)
-        lista = operations[0]()
+        lista = Undo(lista, undo_operations, redo_operations)
     assert get_by_ID('1', lista) is None
     assert get_by_ID('4', lista) is None
     if len(redo_operations) > 0:
-        operations = redo_operations.pop()
-        undo_operations.append(operations)
-        lista = operations[1]()
+        lista = Redo(lista, undo_operations, redo_operations)
     if len(redo_operations) > 0:
-        operations = redo_operations.pop()
-        undo_operations.append(operations)
-        lista = operations[1]()
+        lista = Redo(lista, undo_operations, redo_operations)
     assert lista[0] == ("1", "Ucraina", "economy plus", 100.0, "Da")
     assert lista[1] == ("4", "Ucraina", "economy", 10.0, "Nu")
     if len(redo_operations) > 0:
-        operations = redo_operations.pop()
-        undo_operations.append(operations)
-        lista = operations[1]()
+        lista = Redo(lista, undo_operations, redo_operations)
     assert lista[0] == ("1", "Ucraina", "economy plus", 100.0, "Da")
     assert lista[1] == ("4", "Ucraina", "economy", 10.0, "Nu")
